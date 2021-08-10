@@ -1,0 +1,10 @@
+tD[f_, vars_] := D[f, #] & /@ vars;
+tmp[f_, {v_, v0_}] := f /. v -> v0;
+tD[f_, vars_, ip_] := Fold[tmp, td[f, vars], Transpose[{vars, ip}]] ;
+eval[f_, vars_, p_] := Fold[tmp, f, Transpose[{vars, p}]] ;
+tangentPlane[f_, vars_, ip_] := 
+  Reduce[td[f, vars, ip] . Transpose[vars - ip] == 0];
+hessHlp[f_ , {a, b}] := D[f, a, b];
+hessian[f_, vars_] := 
+  Map[hessHlp[f, #] & , Outer[pair , vars, vars], {2}];
+hessian[f_, vars_, p_] := eval[hessian[f, vars], vars, p];
