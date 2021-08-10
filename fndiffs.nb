@@ -18,3 +18,11 @@ hessian[f_, vars_] :=
 hessian[f_, vars_, p_] := eval[hessian[f, vars], vars, p];
 jacobian[fs_, vars_] := tD[#, vars] & /@ Transpose[fs];
 jacobian[fs_, vars_, p_] := eval[jacobian[f, vars], vars, p];
+zip[xsSeq___] := With[{xs = {xsSeq}}, Transpose[xs]];
+class[f_, vars_, p_] := 
+  With[{dxxp = eval[D[f, {Part[vars, 1], 2}], vars, p], 
+    hess = Det@hessian[f, vars, p]}, {p, hess, 
+    If[hess > 0, If[dxxp < 0, "Max", "Min"], 
+     If[hess == 0, "Indeterminate", "Saddle"]]}];
+classCrit[f_, vars_] := 
+  class[f, vars, #] & /@ (vars /. Solve[tD[f, vars] == 0]);
