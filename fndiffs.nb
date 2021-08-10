@@ -2,10 +2,17 @@ tD[f_, vars_] := D[f, #] & /@ vars;
 tmp[f_, {v_, v0_}] := f /. v -> v0;
 tD[f_, vars_, ip_] := Fold[tmp, td[f, vars], Transpose[{vars, ip}]] ;
 eval[f_, vars_, p_] := Fold[tmp, f, Transpose[{vars, p}]] ;
+(* this is for a surface, F(vars) = 0 *)
 tangentPlane[f_, vars_, ip_] := 
   Reduce[td[f, vars, ip] . Transpose[vars - ip] == 0];
 hessHlp[f_ , {a_, b_}] := D[f, a, b];
 (* use Det@ in front to compute the determinant *)
+(* When the total derivative is 0:
+	if Det(Hessian) > 0:
+		Max if d^2/dx^2(x0) = < 0, min if > 0
+	if Det(Hessian) < 0, saddle point
+	if = 0, inconclusive.
+*) 
 hessian[f_, vars_] := 
   Map[hessHlp[f, #] & , Outer[pair , vars, vars], {2}];
 hessian[f_, vars_, p_] := eval[hessian[f, vars], vars, p];
