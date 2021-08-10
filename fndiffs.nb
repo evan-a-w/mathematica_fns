@@ -11,8 +11,7 @@ hessHlp[f_ , {a_, b_}] := D[f, a, b];
 	if Det(Hessian) > 0:
 		Max if d^2/dx^2(x0) = < 0, min if > 0
 	if Det(Hessian) < 0, saddle point
-	if = 0, inconclusive.
-*) 
+	if = 0, inconclusive. *) 
 hessian[f_, vars_] := 
   Map[hessHlp[f, #] & , Outer[pair , vars, vars], {2}];
 hessian[f_, vars_, p_] := eval[hessian[f, vars], vars, p];
@@ -21,7 +20,7 @@ jacobian[fs_, vars_, p_] := eval[jacobian[f, vars], vars, p];
 zip[xsSeq___] := With[{xs = {xsSeq}}, Transpose[xs]];
 class[f_, vars_, p_] := 
   With[{dxxp = eval[D[f, {Part[vars, 1], 2}], vars, p], 
-    hess = Det@hessian[f, vars, p]}, {p, hess, 
+    hess = Det@hessian[f, vars, p]}, {p, eval[f, vars, p], hess, 
     If[hess > 0, If[dxxp < 0, "Max", "Min"], 
      If[hess == 0, "Indeterminate", "Saddle"]]}];
 classCrit[f_, vars_] := 
