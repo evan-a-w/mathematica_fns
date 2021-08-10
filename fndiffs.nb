@@ -5,6 +5,9 @@ eval[f_, vars_, p_] := Fold[tmp, f, Transpose[{vars, p}]] ;
 tangentPlane[f_, vars_, ip_] := 
   Reduce[td[f, vars, ip] . Transpose[vars - ip] == 0];
 hessHlp[f_ , {a, b}] := D[f, a, b];
+(* use Det@ in front to compute the determinant *)
 hessian[f_, vars_] := 
   Map[hessHlp[f, #] & , Outer[pair , vars, vars], {2}];
 hessian[f_, vars_, p_] := eval[hessian[f, vars], vars, p];
+jacobian[fs_, vars_] := tD[#, vars] & /@ Transpose[fs];
+jacobian[fs_, vars_, p_] := eval[jacobian[f, vars], vars, p];
