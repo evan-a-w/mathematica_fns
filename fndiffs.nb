@@ -5,6 +5,7 @@ eval[f_, vars_, p_] := Fold[tmp, f, Transpose[{vars, p}]] ;
 (* this is for a surface, F(vars) = 0 *)
 tangentPlane[f_, vars_, ip_] := 
   Reduce[tD[f, vars, ip] . Transpose[vars - ip] == 0];
+pair[a_, b_] := {a, b};
 hessHlp[f_ , {a_, b_}] := D[f, a, b];
 (* use Det@ in front to compute the determinant *)
 (* When the total derivative is 0:
@@ -25,3 +26,4 @@ class[f_, vars_, p_] :=
      If[hess == 0, "Indeterminate", "Saddle"]]}];
 classCrit[f_, vars_] := 
   class[f, vars, #] & /@ (vars /. Solve[tD[f, vars] == 0]);
+dropWhile[list_, test_] := Drop[list, LengthWhile[list, test]]; 
